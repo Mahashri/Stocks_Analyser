@@ -84,7 +84,7 @@ def index():
     bar_start = 2500  # Move the bars to the center of the page
 
     # Create a clean horizontal bar plot with increased size
-    fig, ax = plt.subplots(figsize=(8, 90))  # Increased width for better visibility
+    fig, ax = plt.subplots(figsize=(8, 110))  # Increased width for better visibility
 
     y = np.arange(len(stock_names))
 
