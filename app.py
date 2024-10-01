@@ -11,6 +11,24 @@ app = Flask(__name__)
 def index():
     # Expanded list of stocks to display
     stocks = [
+        'ZYDUSLIFE.NS',
+        'ZOMATO.NS','VHL.NS','UNIONBANK.NS',
+        'UBL.NS','TITAGARH.NS',
+        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS',
+        'RADICO.NS','RAILTEL.NS','PFIZER.NS','PEL.NS','ONGC.NS',
+        'NTPC.NS','NATIONALUM.NS',
+        'MUTHOOTFIN.NS','MARUTI.NS','MRPL.NS',
+        'MGL.NS','LATENTVIEW.NS','KOTAKBANK.NS',
+        'KNRCON.NS','KICL.NS',
+        'KPITTECH.NS',
+        'KEI.NS','KCP.NS','JWL.NS','JSWSTEEL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS',
+        'IREDA.NS','INDHOTEL.NS','IDFCFIRSTB.NS','ICICIPRULI.NS','HONDAPOWER.NS',
+        'HEROMOTOCO.NS','HAVELLS.NS',
+        'HDFCLIFE.NS','HDFCAMC.NS',
+        'GREAVESCOT.NS','GAIL.NS','FSL.NS','ELGIEQUIP.NS','DIXON.NS','DATAPATTNS.NS','CUMMINSIND.NS',
+        'CHOLAFIN.NS','CHENNPETRO.NS','CRISIL.NS','BHARATFORG.NS','BDL.NS','BERGEPAINT.NS',
+        'DMART.NS','APARINDS.NS','ANDHRAPAP.NS','ACL.NS',
+
         'WIPRO.NS', 'VEDL.NS', 'SUNPHARMA.NS', 'SULA.NS', 'SAIL.NS', 
         'SOUTHBANK.NS', 'MOTHERSON.NS', 'SRF.NS', 'RAYMOND.NS', 'RAMCOSYS.NS', 
         'RAJESHEXPO.NS', 'PFC.NS', 'POLYCAB.NS', 'PERSISTENT.NS', 'POWERGRID.NS', 
@@ -22,19 +40,21 @@ def index():
         'CCL.NS', 'BHARTIARTL.NS', 'BPCL.NS', 'BALKRISIND.NS', 
         'BAJAJHLDNG.NS', 'BAJAJHFL.NS', 'BAJAJFINSV.NS', 'BAJFINANCE.NS', 
         'BAJAJ-AUTO.NS', 'APLAPOLLO.NS', 'VBL.NS', 'UBL.NS', 'UNITDSPR.NS', 
-        'ULTRACEMCO.NS', 'TRENT.NS', 'TITAN.NS', 'THANGAMAYL.NS', 'TECHM.NS', 
+        'ULTRACEMCO.NS', 'TRENT.NS', 'TITAN.NS', 'THANGAMAYL.NS','TMB.NS', 'TECHM.NS', 
         'TATASTEEL.NS', 'TATAPOWER.NS', 'TATAMOTORS.NS', 'TATAINVEST.NS', 
         'TATACOMM.NS', 'TATACHEM.NS', 'TATAMOTORS.NS', 'TATAELXSI.NS', 
         'TATACONSUM.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
         'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS', 'IRFC.NS', 
         'INFY.NS', 'ITC.NS', 'ICICIBANK.NS', 'HINDUNILVR.NS', 
         'HINDALCO.NS', 'HDFCBANK.NS', 'HCLTECH.NS', 'EXIDEIND.NS', 
-        'DRREDDY.NS', 'DIVISLAB.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 
-        'BRITANNIA.NS', 'ASIANPAINT.NS', 'APOLLOTYRE.NS', 'ACC.NS', 
-        'AMBUJACEM.NS'
+        'DRREDDY.NS', 'DIVISLAB.NS','DEEPAKFERT.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 
+        'BRITANNIA.NS', 'ASIANPAINT.NS','APOLLOHOSP.NS', 'APOLLOTYRE.NS', 'ACC.NS', 
+        'AMBUJACEM.NS','ITC.NS'
     ]
 
+    
     stock_data = {}
+
 
     for stock in stocks:
         ticker = yf.Ticker(stock)
@@ -61,7 +81,7 @@ def index():
     bar_start = 2500  # Move the bars to the center of the page
 
     # Create a clean horizontal bar plot with increased size
-    fig, ax = plt.subplots(figsize=(8, 70))  # Increased width for better visibility
+    fig, ax = plt.subplots(figsize=(8, 90))  # Increased width for better visibility
 
     y = np.arange(len(stock_names))
 
@@ -85,8 +105,8 @@ def index():
         ax.text(price_position, i + 0.20, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
 
         # Add bold low and high labels below the bar (moved closer)
-        ax.text(bar_start, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10,  color='black')
-        ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10,  color='black')
+        ax.text(bar_start, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, fontweight='bold', color='black')
+        ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10, fontweight='bold', color='black')
 
     # Remove all axis ticks, labels, and grids
     ax.set_yticks(y)
@@ -109,7 +129,7 @@ def index():
     plot_url = base64.b64encode(buf.read()).decode('utf-8')
     plt.close()
 
-    return render_template('index.html', plot_url=plot_url, stock_data=stock_data)
+    return render_template('index.html', plot_url=plot_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
