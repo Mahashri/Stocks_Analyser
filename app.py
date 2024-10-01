@@ -84,7 +84,7 @@ def index():
     bar_start = 2500  # Move the bars to the center of the page
 
     # Create a clean horizontal bar plot with increased size
-    fig, ax = plt.subplots(figsize=(8, 110))  # Increased width for better visibility
+    fig, ax = plt.subplots(figsize=(8, 115))  # Increased width for better visibility
 
     y = np.arange(len(stock_names))
 
@@ -108,8 +108,8 @@ def index():
         ax.text(price_position, i + 0.20, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
 
         # Add bold low and high labels below the bar (moved closer)
-        ax.text(bar_start, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, fontweight='bold', color='black')
-        ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10, fontweight='bold', color='black')
+        ax.text(bar_start, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, color='black')
+        ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10,  color='black')
 
     # Remove all axis ticks, labels, and grids
     ax.set_yticks(y)
