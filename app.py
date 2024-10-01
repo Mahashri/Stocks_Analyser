@@ -1,5 +1,8 @@
 from flask import Flask, render_template
 import yfinance as yf
+import matplotlib
+# Set the backend to 'Agg' before importing pyplot
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import io
