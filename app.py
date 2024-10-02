@@ -16,24 +16,24 @@ def index():
     stocks = [
         'ZYDUSLIFE.NS',
         'ZOMATO.NS','VHL.NS','UNIONBANK.NS',
-        'UBL.NS','TITAGARH.NS',
-        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SHRIRAMFIN.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS',
+        'TITAGARH.NS',
+        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SHRIRAMFIN.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS','RAMCOCEM.NS',
         'RADICO.NS','RAILTEL.NS','PFIZER.NS','PEL.NS','ONGC.NS',
         'NTPC.NS','NATIONALUM.NS',
         'MUTHOOTFIN.NS','MARUTI.NS','MRPL.NS',
         'MGL.NS','LATENTVIEW.NS','KOTAKBANK.NS',
         'KNRCON.NS','KICL.NS',
         'KPITTECH.NS',
-        'KEI.NS','KCP.NS','KAYNES.NS','JWL.NS','JSWSTEEL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS',
+        'KEI.NS','KCP.NS','KAYNES.NS','JINDALSTEL.NS','JSWSTEEL.NS','JWL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS','JKCEMENT.NS',
         'IREDA.NS','INDHOTEL.NS','IDFCFIRSTB.NS','ICICIPRULI.NS','HONDAPOWER.NS',
         'HEROMOTOCO.NS','HAVELLS.NS',
         'HDFCLIFE.NS','HDFCAMC.NS',
         'GREAVESCOT.NS','GAIL.NS','FSL.NS','ELGIEQUIP.NS','DIXON.NS','DATAPATTNS.NS','CUMMINSIND.NS',
         'CHOLAFIN.NS','CHENNPETRO.NS','CRISIL.NS','BHARATFORG.NS','BEL.NS','BDL.NS','BERGEPAINT.NS',
-        'DMART.NS','APARINDS.NS','ANDHRAPAP.NS','ACL.NS',
+        'DMART.NS','DALBHARAT.NS','BHARTIHEXA.NS','APARINDS.NS','ANDHRAPAP.NS','ACL.NS',
 
         'WIPRO.NS', 'VEDL.NS', 'SUNPHARMA.NS', 'SULA.NS', 'SAIL.NS', 
-        'SOUTHBANK.NS', 'MOTHERSON.NS', 'SRF.NS', 'RAYMOND.NS', 'RAMCOSYS.NS', 
+        'SOUTHBANK.NS', 'MOTHERSON.NS','SHREECEM.NS', 'SRF.NS', 'RAYMOND.NS', 'RAMCOSYS.NS', 
         'RAJESHEXPO.NS', 'PFC.NS', 'POLYCAB.NS', 'PERSISTENT.NS', 'POWERGRID.NS', 
         'OIL.NS', 'NMDC.NS', 'M&M.NS', 'MAHSEAMLES.NS','JIOFIN.NS', 'KTKBANK.NS', 
         'KALYANKJIL.NS', 'J&KBANK.NS', 'IRCTC.NS', 'HINDZINC.NS', 'GSPL.NS', 
@@ -47,7 +47,7 @@ def index():
         'TATASTEEL.NS', 'TATAPOWER.NS', 'TATAMOTORS.NS', 'TATAINVEST.NS', 
         'TATACOMM.NS', 'TATACHEM.NS', 'TATAMOTORS.NS', 'TATAELXSI.NS', 
         'TATACONSUM.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
-        'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS','LT.NS', 'IRFC.NS', 
+        'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS','LT.NS','RVNL.NS', 'IRFC.NS', 
         'INFY.NS', 'ITC.NS', 'ICICIBANK.NS', 'HINDUNILVR.NS', 
         'HINDALCO.NS', 'HDFCBANK.NS', 'HCLTECH.NS', 'EXIDEIND.NS', 
         'DRREDDY.NS', 'DIVISLAB.NS','DEEPAKFERT.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 
@@ -69,7 +69,7 @@ def index():
 
         # Fetch the company name and remove "Ltd", "Limited", etc.
         company_name = stock_info.get('shortName') or stock_info.get('longName') or stock.replace('.NS', '')
-        suffixes = ['Limited', 'Ltd.', 'Ltd', 'LTD', 'LTD.', 'LIMITED','.','L']
+        suffixes = ['Limited', 'Ltd.', 'Ltd', 'LTD', 'LTD.', 'LIMITED','.',' L',' (I)',' (L)']
         for suffix in suffixes:
             if company_name.endswith(suffix):
                 company_name = company_name.replace(suffix, '').strip()
@@ -101,7 +101,7 @@ def index():
     bar_start = 2500  # Move the bars to the center of the page
 
     # Create a clean horizontal bar plot with increased size
-    fig, ax = plt.subplots(figsize=(8, 115))  # Increased width for better visibility
+    fig, ax = plt.subplots(figsize=(8, 125))  # Increased width for better visibility
 
     y = np.arange(len(valid_company_names))
 
