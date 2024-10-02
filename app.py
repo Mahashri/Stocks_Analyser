@@ -12,42 +12,42 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # Expanded list of stocks to display
+    
     stocks = [
         'ZYDUSLIFE.NS',
         'ZOMATO.NS','VHL.NS','UNIONBANK.NS',
         'UBL.NS','TITAGARH.NS',
-        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS',
+        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SHRIRAMFIN.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS',
         'RADICO.NS','RAILTEL.NS','PFIZER.NS','PEL.NS','ONGC.NS',
         'NTPC.NS','NATIONALUM.NS',
         'MUTHOOTFIN.NS','MARUTI.NS','MRPL.NS',
         'MGL.NS','LATENTVIEW.NS','KOTAKBANK.NS',
         'KNRCON.NS','KICL.NS',
         'KPITTECH.NS',
-        'KEI.NS','KCP.NS','JWL.NS','JSWSTEEL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS',
+        'KEI.NS','KCP.NS','KAYNES.NS','JWL.NS','JSWSTEEL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS',
         'IREDA.NS','INDHOTEL.NS','IDFCFIRSTB.NS','ICICIPRULI.NS','HONDAPOWER.NS',
         'HEROMOTOCO.NS','HAVELLS.NS',
         'HDFCLIFE.NS','HDFCAMC.NS',
         'GREAVESCOT.NS','GAIL.NS','FSL.NS','ELGIEQUIP.NS','DIXON.NS','DATAPATTNS.NS','CUMMINSIND.NS',
-        'CHOLAFIN.NS','CHENNPETRO.NS','CRISIL.NS','BHARATFORG.NS','BDL.NS','BERGEPAINT.NS',
+        'CHOLAFIN.NS','CHENNPETRO.NS','CRISIL.NS','BHARATFORG.NS','BEL.NS','BDL.NS','BERGEPAINT.NS',
         'DMART.NS','APARINDS.NS','ANDHRAPAP.NS','ACL.NS',
 
         'WIPRO.NS', 'VEDL.NS', 'SUNPHARMA.NS', 'SULA.NS', 'SAIL.NS', 
         'SOUTHBANK.NS', 'MOTHERSON.NS', 'SRF.NS', 'RAYMOND.NS', 'RAMCOSYS.NS', 
         'RAJESHEXPO.NS', 'PFC.NS', 'POLYCAB.NS', 'PERSISTENT.NS', 'POWERGRID.NS', 
-        'OIL.NS', 'NMDC.NS', 'M&M.NS', 'MAHSEAMLES.NS', 'KTKBANK.NS', 
+        'OIL.NS', 'NMDC.NS', 'M&M.NS', 'MAHSEAMLES.NS','JIOFIN.NS', 'KTKBANK.NS', 
         'KALYANKJIL.NS', 'J&KBANK.NS', 'IRCTC.NS', 'HINDZINC.NS', 'GSPL.NS', 
         'GSFC.NS', 'GNFC.NS', 'GMDCLTD.NS', 'GESHIP.NS', 'FORCEMOT.NS', 
         'ESCORTS.NS', 'EICHERMOT.NS', 'DEEPAKFERT.NS', 'COALINDIA.NS', 
         'CUB.NS', 'CHOLAFIN.NS', 'CDSL.NS', 'CANBK.NS', 'CEATLTD.NS', 
         'CCL.NS', 'BHARTIARTL.NS', 'BPCL.NS', 'BALKRISIND.NS', 
         'BAJAJHLDNG.NS', 'BAJAJHFL.NS', 'BAJAJFINSV.NS', 'BAJFINANCE.NS', 
-        'BAJAJ-AUTO.NS', 'APLAPOLLO.NS', 'VBL.NS', 'UBL.NS', 'UNITDSPR.NS', 
+        'BAJAJ-AUTO.NS', 'APLAPOLLO.NS','ADANIENT.NS','ADANIPORTS.NS', 'VBL.NS', 'UBL.NS', 'UNITDSPR.NS', 
         'ULTRACEMCO.NS', 'TRENT.NS', 'TITAN.NS', 'THANGAMAYL.NS','TMB.NS', 'TECHM.NS', 
         'TATASTEEL.NS', 'TATAPOWER.NS', 'TATAMOTORS.NS', 'TATAINVEST.NS', 
         'TATACOMM.NS', 'TATACHEM.NS', 'TATAMOTORS.NS', 'TATAELXSI.NS', 
         'TATACONSUM.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
-        'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS', 'IRFC.NS', 
+        'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS','LT.NS', 'IRFC.NS', 
         'INFY.NS', 'ITC.NS', 'ICICIBANK.NS', 'HINDUNILVR.NS', 
         'HINDALCO.NS', 'HDFCBANK.NS', 'HCLTECH.NS', 'EXIDEIND.NS', 
         'DRREDDY.NS', 'DIVISLAB.NS','DEEPAKFERT.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 
@@ -57,14 +57,30 @@ def index():
 
     
     stock_data = {}
-
+    company_names = []  # List to hold company names
 
     for stock in stocks:
         ticker = yf.Ticker(stock)
-        stock_info = ticker.info
+        try:
+            stock_info = ticker.info
+        except Exception as e:
+            print(f"Error fetching data for {stock}: {e}")
+            continue
+
+        # Fetch the company name and remove "Ltd", "Limited", etc.
+        company_name = stock_info.get('shortName') or stock_info.get('longName') or stock.replace('.NS', '')
+        suffixes = ['Limited', 'Ltd.', 'Ltd', 'LTD', 'LTD.', 'LIMITED','.','L']
+        for suffix in suffixes:
+            if company_name.endswith(suffix):
+                company_name = company_name.replace(suffix, '').strip()
+                break  # Remove only one suffix
+
+        company_names.append(company_name)
+                      
 
         try:
             stock_data[stock] = {
+                'Name': company_name,  # Store the company name                                               
                 'Current Price': stock_info['currentPrice'],
                 '52 Week Low': stock_info['fiftyTwoWeekLow'],
                 '52 Week High': stock_info['fiftyTwoWeekHigh']
@@ -73,11 +89,12 @@ def index():
             print(f"Data not available for {stock}")
             continue
 
-    # Sort stocks alphabetically in ascending order
-    stock_names = stocks
-    current_price = [stock_data[stock]['Current Price'] for stock in stock_names]
-    low_52w = [stock_data[stock]['52 Week Low'] for stock in stock_names]
-    high_52w = [stock_data[stock]['52 Week High'] for stock in stock_names]
+    # Ensure that company_names and stock_data are aligned
+    valid_stocks = [stock for stock in stocks if stock in stock_data]
+    valid_company_names = [stock_data[stock]['Name'] for stock in valid_stocks]
+    current_price = [stock_data[stock]['Current Price'] for stock in valid_stocks]
+    low_52w = [stock_data[stock]['52 Week Low'] for stock in valid_stocks]
+    high_52w = [stock_data[stock]['52 Week High'] for stock in valid_stocks]
 
     # Define the fixed width for the bars (all bars will be of the same width)
     bar_width = 90  # A constant width for all bars
@@ -86,10 +103,10 @@ def index():
     # Create a clean horizontal bar plot with increased size
     fig, ax = plt.subplots(figsize=(8, 115))  # Increased width for better visibility
 
-    y = np.arange(len(stock_names))
+    y = np.arange(len(valid_company_names))
 
     # Loop through each stock to create bars and labels
-    for i in range(len(stock_names)):
+    for i in range(len(valid_company_names)):
         bar_end = bar_start + bar_width  # All bars will end at the same fixed point
 
         # Plot a static bar of fixed length
@@ -113,7 +130,7 @@ def index():
 
     # Remove all axis ticks, labels, and grids
     ax.set_yticks(y)
-    ax.set_yticklabels(stock_names, fontweight='bold')
+    ax.set_yticklabels(valid_company_names, fontweight='bold')
     ax.xaxis.set_visible(False)
     ax.yaxis.set_ticks_position('none')
     ax.spines['top'].set_visible(False)
@@ -122,7 +139,7 @@ def index():
     ax.spines['right'].set_visible(False)
 
     # Increase vertical spacing between bars
-    for i in range(len(stock_names)):
+    for i in range(len(valid_company_names)):
         ax.text(0, i, '', fontsize=1)  # This line adds spacing; you can adjust it
 
     # Save the plot to a BytesIO object and encode it as base64 for HTML rendering
