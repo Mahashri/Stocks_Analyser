@@ -14,45 +14,46 @@ app = Flask(__name__)
 def index():
     
     stocks = [
-        'ZYDUSLIFE.NS',
-        'ZOMATO.NS','VHL.NS','UNIONBANK.NS',
+        
+        'ZOMATO.NS','VHL.NS',
         'TITAGARH.NS',
-        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SHRIRAMFIN.NS','SCHAEFFLER.NS','SAFARI.NS','RECLTD.NS','RAMCOCEM.NS',
-        'RADICO.NS','RAILTEL.NS','PFIZER.NS','PEL.NS','ONGC.NS',
-        'NTPC.NS','NATIONALUM.NS',
-        'MUTHOOTFIN.NS','MARUTI.NS','MRPL.NS',
+        'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SHRIRAMFIN.NS','SCHAEFFLER.NS','SAFARI.NS',
+        'RADICO.NS','RAILTEL.NS','RAJESHEXPO.NS','RAMCOCEM.NS','PFIZER.NS','PEL.NS',
+        'MARUTI.NS','MRPL.NS',
         'MGL.NS','LATENTVIEW.NS','KOTAKBANK.NS',
         'KNRCON.NS','KICL.NS',
         'KPITTECH.NS',
         'KEI.NS','KCP.NS','KAYNES.NS','JINDALSTEL.NS','JSWSTEEL.NS','JWL.NS','JSWHL.NS','JKTYRE.NS','JKPAPER.NS','JKCEMENT.NS',
-        'IREDA.NS','INDHOTEL.NS','IDFCFIRSTB.NS','ICICIPRULI.NS','HONDAPOWER.NS',
+        'ICICIPRULI.NS','HONDAPOWER.NS',
         'HEROMOTOCO.NS','HAVELLS.NS',
-        'HDFCLIFE.NS','HDFCAMC.NS',
-        'GREAVESCOT.NS','GAIL.NS','FSL.NS','ELGIEQUIP.NS','DIXON.NS','DATAPATTNS.NS','CUMMINSIND.NS',
+        'HDFCLIFE.NS','HDFCAMC.NS','GSPL.NS', 
+        'GSFC.NS', 'GNFC.NS',
+        'GAIL.NS','FSL.NS','ELGIEQUIP.NS','DIXON.NS','DATAPATTNS.NS','CUMMINSIND.NS',
         'CHOLAFIN.NS','CHENNPETRO.NS','CRISIL.NS','BHARATFORG.NS','BEL.NS','BDL.NS','BERGEPAINT.NS',
         'DMART.NS','DALBHARAT.NS','BHARTIHEXA.NS','APARINDS.NS','ANDHRAPAP.NS','ACL.NS',
 
-        'WIPRO.NS', 'VEDL.NS', 'SUNPHARMA.NS', 'SULA.NS', 'SAIL.NS', 
-        'SOUTHBANK.NS', 'MOTHERSON.NS','SHREECEM.NS', 'SRF.NS', 'RAYMOND.NS',  
-        'RAJESHEXPO.NS', 'PFC.NS', 'POLYCAB.NS', 'PERSISTENT.NS', 'POWERGRID.NS', 
-        'OIL.NS', 'NMDC.NS', 'M&M.NS', 'MAHSEAMLES.NS','JIOFIN.NS', 'KTKBANK.NS', 
-        'KALYANKJIL.NS', 'J&KBANK.NS', 'IRCTC.NS', 'HINDZINC.NS', 'GSPL.NS', 
-        'GSFC.NS', 'GNFC.NS', 'GMDCLTD.NS', 'GESHIP.NS', 'FORCEMOT.NS', 
-        'ESCORTS.NS', 'EICHERMOT.NS', 'DEEPAKFERT.NS', 'COALINDIA.NS', 
+        'ZYDUSLIFE.NS','WIPRO.NS', 'VEDL.NS','UNIONBANK.NS',  'SULA.NS', 'SAIL.NS', 
+        'SOUTHBANK.NS', 'MOTHERSON.NS','SHREECEM.NS', 'SRF.NS',   'RECLTD.NS',
+         'PFC.NS', 'POLYCAB.NS', 'PERSISTENT.NS', 'POWERGRID.NS', 
+        'OIL.NS','ONGC.NS','NMDC.NS',
+        'NTPC.NS','NATCOPHARM.NS','NATIONALUM.NS',  'M&M.NS', 'MAHSEAMLES.NS','JIOFIN.NS', 'KTKBANK.NS', 
+        'KALYANKJIL.NS', 'J&KBANK.NS','IREDA.NS', 'IRCTC.NS','INDHOTEL.NS','IDFCFIRSTB.NS', 'HINDZINC.NS',  'GMDCLTD.NS', 'GESHIP.NS',  
+        'ESCORTS.NS', 'EICHERMOT.NS', 'COALINDIA.NS', 
         'CUB.NS', 'CHOLAFIN.NS', 'CDSL.NS', 'CANBK.NS', 'CEATLTD.NS', 
         'CCL.NS', 'BHARTIARTL.NS', 'BPCL.NS', 'BALKRISIND.NS', 
-        'BAJAJHLDNG.NS', 'BAJAJHFL.NS', 'BAJAJFINSV.NS', 'BAJFINANCE.NS', 
-        'BAJAJ-AUTO.NS', 'APLAPOLLO.NS','ADANIENT.NS','ADANIPORTS.NS', 'VBL.NS', 'UBL.NS', 'UNITDSPR.NS', 
+         'APLAPOLLO.NS','ADANIENT.NS','ADANIPORTS.NS',
+
+		'VBL.NS', 'UBL.NS', 'UNITDSPR.NS', 
         'ULTRACEMCO.NS', 'TRENT.NS', 'TITAN.NS', 'THANGAMAYL.NS','TMB.NS', 'TECHM.NS', 
-        'TATASTEEL.NS', 'TATAPOWER.NS', 'TATAMOTORS.NS', 'TATAINVEST.NS', 
+        'TATASTEEL.NS', 'TATAPOWER.NS', 'TATAINVEST.NS', 
         'TATACOMM.NS', 'TATACHEM.NS', 'TATAMOTORS.NS', 'TATAELXSI.NS', 
-        'TATACONSUM.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
-        'NESTLEIND.NS', 'MARICO.NS', 'MANAPPURAM.NS','LT.NS','RVNL.NS', 'IRFC.NS', 
+        'TATACONSUM.NS','SUNPHARMA.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
+        'NESTLEIND.NS', 'MARICO.NS','MUTHOOTFIN.NS', 'MANAPPURAM.NS','LT.NS','RVNL.NS', 'IRFC.NS', 
         'INFY.NS', 'ITC.NS', 'ICICIBANK.NS', 'HINDUNILVR.NS', 
         'HINDALCO.NS', 'HDFCBANK.NS', 'HCLTECH.NS', 'EXIDEIND.NS', 
         'DRREDDY.NS', 'DIVISLAB.NS','DEEPAKFERT.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 
-        'BRITANNIA.NS', 'ASIANPAINT.NS','APOLLOHOSP.NS', 'APOLLOTYRE.NS', 'ACC.NS', 
-        'AMBUJACEM.NS','ITC.NS'
+		'BAJAJHLDNG.NS', 'BAJAJHFL.NS', 'BAJAJFINSV.NS', 'BAJFINANCE.NS', 'BAJAJ-AUTO.NS',
+		'BRITANNIA.NS', 'ASIANPAINT.NS','APOLLOHOSP.NS', 'APOLLOTYRE.NS', 'ACC.NS','AMBUJACEM.NS','ITC.NS'
     ]
 
     
@@ -122,10 +123,10 @@ def index():
         ax.annotate('▲', xy=(price_position, i), fontsize=15, color='green', ha='center', va='center', fontweight='bold')
 
         # Display the current price above the bar
-        ax.text(price_position, i + 0.20, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
+        ax.text(price_position, i + 0.25, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
 
         # Add bold low and high labels below the bar (moved closer)
-        ax.text(bar_start, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, color='black')
+        ax.text(bar_start+5, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, color='black')
         ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10,  color='black')
 
     # Remove all axis ticks, labels, and grids
