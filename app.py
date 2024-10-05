@@ -12,8 +12,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # Full list of stocks
+    
     stocks = [
+        
         'ZOMATO.NS','VHL.NS',
         'TITAGARH.NS',
         'TIINDIA.NS','SUZLON.NS','SIEMENS.NS','SCHAEFFLER.NS','SAFARI.NS',
@@ -47,135 +48,109 @@ def index():
         'TATAELXSI.NS','TATACOMM.NS','TATACONSUM.NS','TATASTEEL.NS', 'TATAPOWER.NS', 'TATAINVEST.NS', 
          'TATACHEM.NS', 'TATAMOTORS.NS', 'TCS.NS',
         'SUNPHARMA.NS', 'RELIANCE.NS', 'PGHH.NS', 'PIDILITIND.NS', 
-        'NESTLEIND.NS', 'MARICO.NS','MUTHOOTFIN.NS', 'MANAPPURAM.NS','LT.NS','RVNL.NS','IRCON.NS', 'IRFC.NS', 
+        'NESTLEIND.NS', 'MARICO.NS','MUTHOOTFIN.NS', 'MANAPPURAM.NS','LT.NS','RVNL.NS', 'IRFC.NS', 
         'INFY.NS', 'ITC.NS', 'ICICIBANK.NS', 
         'HINDALCO.NS', 'HINDUNILVR.NS', 'HAL.NS', 'HDFCBANK.NS', 'HCLTECH.NS', 'EXIDEIND.NS', 
         'DRREDDY.NS', 'DIVISLAB.NS','DEEPAKFERT.NS', 'DEEPAKNTR.NS', 'COLPAL.NS', 'BRITANNIA.NS',
 		'BAJAJHLDNG.NS', 'BAJAJHFL.NS', 'BAJAJFINSV.NS', 'BAJFINANCE.NS', 'BAJAJ-AUTO.NS',
-		'ASIANPAINT.NS','APOLLOHOSP.NS', 'APOLLOTYRE.NS', 'ACC.NS','AMBUJACEM.NS','ITC.NS'
+		 'ASIANPAINT.NS','APOLLOHOSP.NS', 'APOLLOTYRE.NS', 'ACC.NS','AMBUJACEM.NS','ITC.NS'
     ]
 
-    # Sector-wise stocks
-    railway_stocks = ['RAILTEL.NS','RITES.NS','JWL.NS','TITAGARH.NS','IRCTC.NS', 'RVNL.NS', 'IRCON.NS','IRFC.NS']
     
-    bank_stocks = ['YESBANK.NS','CSBBANK.NS','UTKARSHBNK.NS','JSFB.NS','DCBBANK.NS','ESAFSFB.NS','FINOPB.NS','SURYODAY.NS','CAPITALSFB.NS','DHANBANK.NS','UCOBANK.NS',
-    'BANDHANBNK.NS', 'PSB.NS','RBLBANK.NS','J&KBANK.NS', 'MAHABANK.NS', 'UJJIVANSFB.NS','EQUITASBNK.NS',
-    'BANKINDIA.NS', 'CENTRALBK.NS', 'AUBANK.NS',  'FEDERALBNK.NS', 'INDIANB.NS', 'IDBI.NS', 'IOB.NS', 'INDUSINDBK.NS',
-    'KARURVYSYA.NS', 'PNB.NS','SOUTHBANK.NS', 'BANKBARODA.NS', 'UNIONBANK.NS','CUB.NS', 'CANBK.NS', 'IDFC.NS', 'IDFCFIRSTB.NS', 
-    'KOTAKBANK.NS', 'AXISBANK.NS', 'SBIN.NS', 'TMB.NS', 'ICICIBANK.NS', 'HDFCBANK.NS']
+    stock_data = {}
+    company_names = []  # List to hold company names
 
-    # Helper function to fetch stock data
-    def fetch_stock_data(stocks_list):
-        stock_data = {}
-        company_names = []
+    for stock in stocks:
+        ticker = yf.Ticker(stock)
+        try:
+            stock_info = ticker.info
+        except Exception as e:
+            print(f"Error fetching data for {stock}: {e}")
+            continue
 
-        for stock in stocks_list:
-            ticker = yf.Ticker(stock)
-            try:
-                stock_info = ticker.info
-            except Exception as e:
-                print(f"Error fetching data for {stock}: {e}")
-                continue
+        # Fetch the company name and remove "Ltd", "Limited", etc.
+        company_name = stock_info.get('shortName') or stock_info.get('longName') or stock.replace('.NS', '')
+        suffixes = ['Limited', 'Ltd.', 'Ltd', 'LTD', 'LTD.', 'LIMITED','.',' L',' (I)',' (L)']
+        for suffix in suffixes:
+            if company_name.endswith(suffix):
+                company_name = company_name.replace(suffix, '').strip()
+                break  # Remove only one suffix
 
-            company_name = stock_info.get('shortName') or stock_info.get('longName') or stock.replace('.NS', '')
-            suffixes = ['Limited', 'Ltd.', 'Ltd', 'LTD', 'LTD.', 'LIMITED', '.', ' L', ' (I)', ' (L)']
-            for suffix in suffixes:
-                if company_name.endswith(suffix):
-                    company_name = company_name.replace(suffix, '').strip()
-                    break
+        company_names.append(company_name)
+                      
 
-            company_names.append(company_name)
+        try:
+            stock_data[stock] = {
+                'Name': company_name,  # Store the company name                                               
+                'Current Price': stock_info['currentPrice'],
+                '52 Week Low': stock_info['fiftyTwoWeekLow'],
+                '52 Week High': stock_info['fiftyTwoWeekHigh']
+            }
+        except KeyError:
+            print(f"Data not available for {stock}")
+            continue
 
-            try:
-                stock_data[stock] = {
-                    'Name': company_name,
-                    'Current Price': stock_info['currentPrice'],
-                    '52 Week Low': stock_info['fiftyTwoWeekLow'],
-                    '52 Week High': stock_info['fiftyTwoWeekHigh']
-                }
-            except KeyError:
-                print(f"Data not available for {stock}")
-                continue
-
-        return company_names, stock_data
-
-    # Function to create a plot
-    def create_plot(company_names, stock_data, valid_stocks, bar_width=90, bar_start=2500, plot_height=None):
-        current_price = [stock_data[stock]['Current Price'] for stock in valid_stocks]
-        low_52w = [stock_data[stock]['52 Week Low'] for stock in valid_stocks]
-        high_52w = [stock_data[stock]['52 Week High'] for stock in valid_stocks]
-
-        if plot_height is None:
-            plot_height = len(valid_stocks) * 1 if valid_stocks else 1
-
-        fig, ax = plt.subplots(figsize=(6, plot_height))
-
-        y = np.arange(len(company_names))
-
-        for i in range(len(company_names)):
-            bar_end = bar_start + bar_width
-            ax.plot([bar_start, bar_end], [i, i], color='lightblue', lw=5, zorder=1)
-
-            if high_52w[i] > low_52w[i]:
-                price_position = bar_start + (current_price[i] - low_52w[i]) / (high_52w[i] - low_52w[i]) * bar_width
-            else:
-                price_position = bar_start
-
-            ax.annotate('▲', xy=(price_position, i), fontsize=15, color='green', ha='center', va='center', fontweight='bold')
-            ax.text(price_position, i + 0.20, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
-            ax.text(bar_start + 5, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, color='black')
-            ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10, color='black')
-
-        ax.set_yticks(y)
-        ax.set_yticklabels(company_names, fontweight='bold')
-        ax.xaxis.set_visible(False)
-        ax.yaxis.set_ticks_position('none')
-        ax.spines['top'].set_visible(False)
-        ax.spines['bottom'].set_visible(False)
-        ax.spines['left'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-
-        buf = io.BytesIO()
-        plt.savefig(buf, format='png', bbox_inches='tight', transparent=True)
-        buf.seek(0)
-        plot_url = base64.b64encode(buf.read()).decode('utf-8')
-        plt.close()
-
-        return plot_url
-
-    # Fetch stock data for all stocks
-    company_names, stock_data = fetch_stock_data(stocks)
+    # Ensure that company_names and stock_data are aligned
     valid_stocks = [stock for stock in stocks if stock in stock_data]
     valid_company_names = [stock_data[stock]['Name'] for stock in valid_stocks]
-    
-    # Check if valid_stocks is empty
-    if not valid_stocks:
-        main_plot_url = None
-    else:
-        main_plot_url = create_plot(valid_company_names, stock_data, valid_stocks)
+    current_price = [stock_data[stock]['Current Price'] for stock in valid_stocks]
+    low_52w = [stock_data[stock]['52 Week Low'] for stock in valid_stocks]
+    high_52w = [stock_data[stock]['52 Week High'] for stock in valid_stocks]
 
-    # Fetch stock data for Railway stocks
-    railway_company_names, railway_stock_data = fetch_stock_data(railway_stocks)
-    valid_railway_stocks = [stock for stock in railway_stocks if stock in railway_stock_data]
-    
-    # Check if valid_railway_stocks is empty
-    if not valid_railway_stocks:
-        railway_plot_url = None
-    else:
-        railway_plot_url = create_plot(railway_company_names, railway_stock_data, valid_railway_stocks)
+    # Define the fixed width for the bars (all bars will be of the same width)
+    bar_width = 90  # A constant width for all bars
+    bar_start = 2500  # Move the bars to the center of the page
 
-    # Fetch stock data for bank stocks
-    bank_company_names, bank_stock_data = fetch_stock_data(bank_stocks)
-    valid_bank_stocks = [stock for stock in bank_stocks if stock in bank_stock_data]
-    
-    # Check if valid_bank_stocks is empty
-    if not valid_bank_stocks:
-        bank_plot_url = None
-    else:
-        bank_plot_url = create_plot(bank_company_names, bank_stock_data, valid_bank_stocks)
+    # Create a clean horizontal bar plot with increased size
+    fig, ax = plt.subplots(figsize=(8, 125))  # Increased width for better visibility
 
-    # Render the HTML template with both plots
-    return render_template('index.html', main_plot_url=main_plot_url, railway_plot_url=railway_plot_url, bank_plot_url=bank_plot_url)
+    y = np.arange(len(valid_company_names))
+
+    # Loop through each stock to create bars and labels
+    for i in range(len(valid_company_names)):
+        bar_end = bar_start + bar_width  # All bars will end at the same fixed point
+
+        # Plot a static bar of fixed length
+        ax.plot([bar_start, bar_end], [i, i], color='lightblue', lw=5, zorder=1)
+
+        # Calculate the relative position of the current price between the 52-week low and high
+        if high_52w[i] > low_52w[i]:
+            price_position = bar_start + (current_price[i] - low_52w[i]) / (high_52w[i] - low_52w[i]) * bar_width
+        else:
+            price_position = bar_start  # Edge case: if 52-week low equals high (or zero), place at start
+
+        # Place a green arrow (↑) for the current price on the bar
+        ax.annotate('▲', xy=(price_position, i), fontsize=15, color='green', ha='center', va='center', fontweight='bold')
+
+        # Display the current price above the bar
+        ax.text(price_position, i + 0.25, f'₹{current_price[i]:.2f}', va='center', ha='center', color='black', fontweight='bold')
+
+        # Add bold low and high labels below the bar (moved closer)
+        ax.text(bar_start+5, i - 0.30, f'L ₹{low_52w[i]:.2f}', va='center', ha='right', fontsize=10, color='black')
+        ax.text(bar_end, i - 0.30, f'H ₹{high_52w[i]:.2f}', va='center', ha='left', fontsize=10,  color='black')
+
+    # Remove all axis ticks, labels, and grids
+    ax.set_yticks(y)
+    ax.set_yticklabels(valid_company_names, fontweight='bold')
+    ax.xaxis.set_visible(False)
+    ax.yaxis.set_ticks_position('none')
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    # Increase vertical spacing between bars
+    for i in range(len(valid_company_names)):
+        ax.text(0, i, '', fontsize=1)  # This line adds spacing; you can adjust it
+
+    # Save the plot to a BytesIO object and encode it as base64 for HTML rendering
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', transparent=True)
+    buf.seek(0)
+    plot_url = base64.b64encode(buf.read()).decode('utf-8')
+    plt.close()
+
+    return render_template('index.html', plot_url=plot_url)
 
 if __name__ == '__main__':
     app.run(debug=True)
